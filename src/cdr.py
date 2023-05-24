@@ -12,12 +12,12 @@ class CDR:
         self.period = period
         self.separator = separator
 
-    def create_CDR(self, type):
+    def create_CDR(self, call_type, call_dist):
         cdr_date = gen_date(self.year, self.month, self.day, self.period)
 
         area_list = [11, 21, 31, 12, 81, 61, 41]
 
-        if type == "LOCAL":
+        if call_dist == "LOCAL":
             num_a, num_b = create_number_pair(
                 area_size=2,
                 area_list=area_list,
@@ -28,7 +28,7 @@ class CDR:
                 country_code=55,
                 call_type="LOCAL",
             )
-        if type == "DDD":
+        if call_dist == "DDD":
             num_a, num_b = create_number_pair(
                 area_size=2,
                 area_list=area_list,
@@ -40,6 +40,10 @@ class CDR:
                 call_type="DDD",
             )
 
+        if call_type == "SMS":
+            cdr_date["duration"] = 0
+            cdr_date["end_date"] = cdr_date["start_date"]
+
         a_number = str(num_a["number"])
         a_country_code = str(num_a["country_code"])
         a_area_code = str(num_a["area_code"])
@@ -49,7 +53,6 @@ class CDR:
         start_date = str(cdr_date["start_date"])
         end_date = str(cdr_date["end_date"])
         duration = str(cdr_date["duration"])
-        call_type = "VOICE"
         if random.random() < 0.85:
             call_result = "SUCCESS"
         else:
