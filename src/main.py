@@ -7,8 +7,9 @@ YEAR = 2023
 MONTH = 5
 DAY = 10
 PERIOD = 15
+SEPARATOR = "|"
 
-cdr = CDR(day=DAY, month=MONTH, year=YEAR, period=PERIOD, separator="|")
+cdr = CDR(day=DAY, month=MONTH, year=YEAR, period=PERIOD, separator=SEPARATOR)
 with open("./cdr_data.csv", "w") as f:
     for _ in range(0, NUM_CDRS):
         if random.random() < 0.75:
