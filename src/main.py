@@ -3,16 +3,22 @@ import random
 from gen_dates import create_dates
 from gen_phone import create_numbers
 
+# Main Variables
 NUM_RECORDS = 50000
+SEPARATOR = "|"
+END_LINE = "\n"
+YEAR = 2023
+MONTH = 5
+DAY = 10
+PERIOD = 15  # File contains a batch of 15m of records
 
 print("CREATING NUMBERS...")
 numbers = create_numbers(NUM_RECORDS)
 print("DONE")
 print("CREATING VALID DATES...")
-dates = create_dates(2023, 5, 10, 15, NUM_RECORDS)
+dates = create_dates(YEAR, MONTH, DAY, PERIOD, NUM_RECORDS)
 print("DONE")
-CDR = ""
-SEPARATOR = "|"
+
 with open("./cdr_list.csv", "w") as f:
     for i in range(0, NUM_RECORDS):
         a_number = str(numbers[i][0]["number"])
@@ -51,5 +57,5 @@ with open("./cdr_list.csv", "w") as f:
             + call_type
             + SEPARATOR
             + call_result
-            + "\n"
+            + END_LINE
         )

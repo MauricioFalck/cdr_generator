@@ -1,7 +1,7 @@
 import random
 
 
-def format_suffix(num) -> str:
+def format_suffix(num: int) -> str:
     if num < 1000:
         num_zeros = 4 - len(str(num))
         output = ""
@@ -12,7 +12,7 @@ def format_suffix(num) -> str:
         return str(num)
 
 
-def create_numbers(total_records) -> list:
+def create_numbers(total_records: int) -> list:
     avail_number = []
     total_numbers = int(total_records * 1.4)
 
@@ -39,11 +39,11 @@ def create_numbers(total_records) -> list:
     return output_list
 
 
-def gen_phone_number():
+def gen_phone_number() -> dict:
     country_code = "55"
-
+    # TODO: Add different area codes
     area_code = [11, 21, 12, 31, 41, 61]
-
+    # Prioritize traffic from area code 11 and 21
     rand = random.random()
     if rand < 0.3:
         rand_code = area_code[0]

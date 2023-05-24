@@ -2,14 +2,16 @@ import datetime
 import random
 
 
-def create_dates(year, month, day, period_in_min, number) -> list:
+def create_dates(
+    year: int, month: int, day: int, period_in_min: int, number_records: int
+) -> list:
     output_dates = []
-    for _ in range(0, number):
+    for _ in range(0, number_records):
         output_dates.append(gen_date(year, month, day, period_in_min))
     return output_dates
 
 
-def get_duration():
+def get_duration() -> int:
     duration_prob = random.random()
     if duration_prob <= 0.1:
         duration = random.randint(1, 9)
@@ -20,7 +22,7 @@ def get_duration():
     return duration
 
 
-def gen_date(year, month, day, period_in_min):
+def gen_date(year: int, month: int, day: int, period_in_min: int) -> dict:
     end_date = datetime.datetime(
         year=year,
         month=month,
