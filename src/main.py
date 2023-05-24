@@ -1,61 +1,17 @@
 import random
 
-from gen_dates import create_dates
-from gen_phone import create_numbers
+from cdr import CDR
 
-# Main Variables
-NUM_RECORDS = 50000
-SEPARATOR = "|"
-END_LINE = "\n"
+NUM_CDRS = 100000
 YEAR = 2023
 MONTH = 5
 DAY = 10
-PERIOD = 15  # File contains a batch of 15m of records
+PERIOD = 15
 
-print("CREATING NUMBERS...")
-numbers = create_numbers(NUM_RECORDS)
-print("DONE")
-print("CREATING VALID DATES...")
-dates = create_dates(YEAR, MONTH, DAY, PERIOD, NUM_RECORDS)
-print("DONE")
-
-with open("./cdr_list.csv", "w") as f:
-    for i in range(0, NUM_RECORDS):
-        a_number = str(numbers[i][0]["number"])
-        a_country_code = str(numbers[i][0]["country_code"])
-        a_area_code = str(numbers[i][0]["area_code"])
-        b_number = str(numbers[i][1]["number"])
-        b_country_code = str(numbers[i][1]["country_code"])
-        b_area_code = str(numbers[i][1]["area_code"])
-        start_date = str(dates[i]["start_date"])
-        end_date = str(dates[i]["end_date"])
-        duration = str(dates[i]["duration"])
-        call_type = "VOICE"
+cdr = CDR(day=DAY, month=MONTH, year=YEAR, period=PERIOD, separator="|")
+with open("./cdr_data.csv", "w") as f:
+    for _ in range(0, NUM_CDRS):
         if random.random() < 0.85:
-            call_result = "SUCCESS"
+            f.write(cdr.create_CDR("LOCAL"))
         else:
-            call_result = "FAILURE"
-        f.write(
-            a_number
-            + SEPARATOR
-            + a_country_code
-            + SEPARATOR
-            + a_area_code
-            + SEPARATOR
-            + b_number
-            + SEPARATOR
-            + b_country_code
-            + SEPARATOR
-            + b_area_code
-            + SEPARATOR
-            + start_date
-            + SEPARATOR
-            + end_date
-            + SEPARATOR
-            + duration
-            + SEPARATOR
-            + call_type
-            + SEPARATOR
-            + call_result
-            + END_LINE
-        )
+            f.write(cdr.create_CDR("DDD"))

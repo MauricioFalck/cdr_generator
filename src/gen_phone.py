@@ -1,9 +1,9 @@
 import random
 
 
-def format_suffix(num: int) -> str:
-    if num < 1000:
-        num_zeros = 4 - len(str(num))
+def add_zeros(num: int, size: int) -> str:
+    if num < 10**size:
+        num_zeros = size - len(str(num))
         output = ""
         for i in range(0, num_zeros):
             output = output + "0"
@@ -12,49 +12,43 @@ def format_suffix(num: int) -> str:
         return str(num)
 
 
-def create_numbers(total_records: int) -> list:
-    avail_number = []
-    total_numbers = int(total_records * 1.4)
-
-    for _ in range(0, total_numbers):
-        while True:
-            num = gen_phone_number()
-            if not num in avail_number:
-                avail_number.append(num)
-                break
-
-    output_list = []
-    for _ in range(0, total_records):
-        a_num = avail_number[random.randrange(0, len(avail_number))]
-        b_num = 0
-        while True:
-            b_num = avail_number[random.randrange(0, len(avail_number))]
-            if (
-                a_num["number"] != b_num["number"]
-                or a_num["area_code"] != b_num["area_code"]
-            ):
-                break
-
-        output_list.append((a_num, b_num))
-    return output_list
+def get_suffix(size: int) -> str:
+    return add_zeros(random.randrange(0, 10**size), size)
 
 
-def gen_phone_number() -> dict:
-    country_code = "55"
-    # TODO: Add different area codes
-    area_code = [11, 21, 12, 31, 41, 61]
-    # Prioritize traffic from area code 11 and 21
-    rand = random.random()
-    if rand < 0.3:
-        rand_code = area_code[0]
-    elif rand >= 0.3 and rand < 0.6:
-        rand_code = area_code[1]
-    else:
-        rand_code = area_code[random.randint(2, len(area_code) - 1)]
+def get_prefix(start: int, size: int) -> str:
+    return str(random.randrange(start, 10**size))
 
-    return {
-        "country_code": country_code,
-        "area_code": str(rand_code),
-        "number": str(random.randrange(4000, 10000))
-        + format_suffix(random.randrange(0, 10000)),
-    }
+
+def create_number_pair(
+    area_size: int,
+    area_list: list,
+    area_src: int,
+    prefix_size: int,
+    prefix_start: int,
+    suffix_size: int,
+    country_code: int,
+    call_type: str,
+):
+    num_a = {}
+    num_b = {}
+
+    num_a["number"] = get_prefix(prefix_start, prefix_size) + get_suffix(suffix_size)
+    num_b["number"] = get_prefix(prefix_start, prefix_size) + get_suffix(suffix_size)
+
+    if call_type == "LOCAL":
+        num_a["area_code"] = add_zeros(area_src, area_size)
+        num_b["area_code"] = add_zeros(area_src, area_size)
+    if call_type == "DDD":
+        area_list.pop(area_list.index(area_src))
+        rand_area = area_list[random.randrange(0, len(area_list))]
+        if random.random() < 0.5:
+            num_a["area_code"] = add_zeros(area_src, area_size)
+            num_b["area_code"] = add_zeros(rand_area, area_size)
+        else:
+            num_b["area_code"] = add_zeros(area_src, area_size)
+            num_a["area_code"] = add_zeros(rand_area, area_size)
+    num_a["country_code"] = country_code
+    num_b["country_code"] = country_code
+
+    return (num_a, num_b)
